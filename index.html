@@ -1,1 +1,87 @@
+// Mushukcha oyoq/tanasini silash animatsiyasi
+      catSvg.classList.add('cat-licking');
+      setTimeout(() => catSvg.classList.remove('cat-licking'), 600);
 
+      // Shar hajmini oshirish
+      const scale = 1 + (clicks * 0.25);
+      balloon.style.setProperty('--balloon-scale', scale);
+
+      if (clicks < maxClicks) {
+        balloonText.innerText = ${maxClicks - clicks} marta silang! ❤️;
+      } else {
+        // Portlash effekti
+        balloonText.innerText = "💥";
+        setTimeout(popBalloon, 300);
+      }
+    }
+
+    function popBalloon() {
+      const balloonWrapper = document.getElementById('balloon-wrapper');
+      balloonWrapper.style.opacity = '0';
+      balloonWrapper.style.transform = 'scale(1.8)';
+      
+      // Konfetti otilishi
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.5 },
+        colors: ['#f472b6', '#fb7185', '#f43f5e', '#e11d48', '#ffffff']
+      });
+
+      // Modani ko'rsatish
+      setTimeout(() => {
+        balloonWrapper.style.display = 'none';
+        showModal();
+      }, 500);
+    }
+
+    function showModal() {
+      const modal = document.getElementById('modal');
+      const modalContent = document.getElementById('modal-content');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modalContent.classList.remove('scale-90');
+        modalContent.classList.add('scale-100');
+      }, 50);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.add('opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 500);
+    }
+
+    // 2. Rasmlar Slayderi (2.5 soniya almashtirish)
+    const slides = document.querySelectorAll('.slide-img');
+    let currentSlide = 0;
+
+    setInterval(() => {
+      slides[currentSlide].classList.remove('opacity-100');
+      slides[currentSlide].classList.add('opacity-0');
+      
+      currentSlide = (currentSlide + 1) % slides.length;
+      
+      slides[currentSlide].classList.remove('opacity-0');
+      slides[currentSlide].classList.add('opacity-100');
+    }, 2500);
+
+    // 3. Orqa fonda erkin suzuvchi yurakchalar yaratish
+    function createBgHeart() {
+      const container = document.getElementById('hearts-container');
+      const heart = document.createElement('div');
+      heart.classList.add('bg-heart');
+      heart.innerHTML = '🌸';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 4 + 5) + 's';
+      heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+      
+      container.appendChild(heart);
+      setTimeout(() => heart.remove(), 8000);
+    }
+    setInterval(createBgHeart, 600);
+  </script>
+</body>
+</html>
