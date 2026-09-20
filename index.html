@@ -1,4 +1,169 @@
-// Mushukcha oyoq/tanasini silash animatsiyasi
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doimo xursand va chiroyli bo'ling! ✨</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #fde2e4 0%, #fbcfe8 50%, #f472b6 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .font-title {
+      font-family: 'Dancing Script', cursive;
+    }
+    
+    /* Mushukcha animatsiyasi */
+    @keyframes pawLick {
+      0%, 100% { transform: rotate(0deg); }
+      30% { transform: rotate(-12deg) translateY(-2px); }
+      60% { transform: rotate(8deg) translateY(1px); }
+    }
+    .cat-licking {
+      animation: pawLick 0.6s ease-in-out;
+    }
+
+    /* Shar tebranish animatsiyasi */
+    @keyframes pulseHeart {
+      0%, 100% { transform: scale(var(--balloon-scale, 1)); }
+      50% { transform: scale(calc(var(--balloon-scale, 1) * 1.05)); }
+    }
+    .heart-balloon {
+      animation: pulseHeart 2s infinite ease-in-out;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Orqa fonda suzuvchi yurakchalar */
+    .bg-heart {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.6);
+      animation: floatUp 8s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-between p-4 min-h-screen relative text-gray-700">
+
+  <!-- Orqa fon suzuvchi yurakchalari -->
+  <div id="hearts-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+  <!-- Yuqori qism: Sarlavha va Tabrik -->
+  <header class="text-center mt-4 z-10 space-y-2">
+    <h1 class="font-title text-4xl md:text-6xl text-pink-700 drop-shadow-md">
+      Doimo hursand va chiroyli bo'ling! ✨💖
+    </h1>
+    <p class="text-pink-800 text-sm md:text-base font-semibold bg-white/40 backdrop-blur-md px-4 py-1.5 rounded-full inline-block shadow-sm">
+      Kayfiyatni ko'tarish uchun mushukchani silang 👇
+    </p>
+  </header>
+
+  <!-- Markaziy qism: Mushukcha va Shar Interaktivi -->
+  <main class="relative my-auto py-8 flex flex-col items-center justify-center z-10 w-full max-w-md">
+    
+    <!-- Yurakli Shar -->
+    <div id="balloon-wrapper" class="relative cursor-pointer transition-all duration-300 select-none" onclick="strokeCat()">
+      <div id="balloon" class="heart-balloon text-red-500 filter drop-shadow-lg flex items-center justify-center relative" style="--balloon-scale: 1;">
+        <!-- SVG Yurak Shar -->
+        <svg class="w-36 h-36 md:w-44 md:h-44 fill-current text-pink-500 hover:text-pink-400 transition-colors" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <span id="balloon-text" class="absolute text-white font-bold text-xs md:text-sm text-center px-2 pointer-events-none drop-shadow">
+          Meni silang! 🐾
+        </span>
+      </div>
+      <!-- Sharning ipi -->
+      <div class="w-0.5 h-12 bg-pink-300 mx-auto -mt-2 shadow-sm"></div>
+    </div>
+
+    <!-- Qora Mushukcha -->
+    <div id="cat" class="relative cursor-pointer mt-1 group" onclick="strokeCat()">
+      <!-- SVG Qora Mushuk -->
+      <svg id="cat-svg" class="w-28 h-28 md:w-32 md:h-32 transition-transform duration-200 group-hover:scale-105" viewBox="0 0 100 100">
+        <!-- Mushuk tanasi -->
+        <path d="M 30 80 Q 25 50 40 40 Q 50 35 60 40 Q 75 50 70 80 Z" fill="#1e1e24" />
+        <!-- Bosh -->
+        <circle cx="50" cy="35" r="20" fill="#1e1e24" />
+        <!-- Quloqlar -->
+        <polygon points="33,22 40,5 46,20" fill="#1e1e24" />
+        <polygon points="35,20 40,8 44,19" fill="#f472b6" />
+        <polygon points="67,22 60,5 54,20" fill="#1e1e24" />
+        <polygon points="65,20 60,8 56,19" fill="#f472b6" />
+        <!-- Ko'zlar -->
+        <ellipse cx="43" cy="32" rx="3.5" ry="5" fill="#facc15" />
+        <ellipse cx="57" cy="32" rx="3.5" ry="5" fill="#facc15" />
+        <ellipse cx="43" cy="32" rx="1" ry="3.5" fill="#000" />
+        <ellipse cx="57" cy="32" rx="1" ry="3.5" fill="#000" />
+        <!-- Burun va Og'iz -->
+        <polygon points="49,38 51,38 50,40" fill="#f472b6" />
+        <!-- Muroyim oyoqcha (Animatsiya uchun id berilgan) -->
+        <g id="cat-paw">
+          <ellipse cx="38" cy="78" rx="6" ry="4" fill="#1e1e24" />
+          <ellipse cx="62" cy="78" rx="6" ry="4" fill="#1e1e24" />
+        </g>
+        <!-- Dum -->
+        <path d="M 68 75 Q 85 70 80 50" stroke="#1e1e24" stroke-width="5" fill="none" stroke-linecap="round" />
+      </svg>
+      <div class="text-center text-xs text-pink-700 font-semibold mt-1 opacity-80 group-hover:opacity-100 transition-opacity">
+        (Mushukchani silash uchun bosing 🐾)
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Pastki qism: Rasmlar Slayderi (2.5 soniya farq bilan) -->
+  <footer class="w-full max-w-sm z-10 mb-4">
+    <div class="bg-white/50 backdrop-blur-md p-2.5 rounded-2xl shadow-xl border border-white/60">
+      <div class="relative w-full h-64 md:h-72 overflow-hidden rounded-xl shadow-inner">
+        
+        <!-- Rasmlar (3 soat davomida tayyorlangan rasmlar joylashuvi) -->
+        <img class="slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" src="1000006080.jpg" alt="Rasm 1">
+        <img class="slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" src="1000006081.jpg" alt="Rasm 2">
+        <img class="slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" src="1000006079.jpg" alt="Rasm 3">
+        <img class="slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" src="1000006078.jpg" alt="Rasm 4">
+
+      </div>
+      <p class="text-center text-xs text-pink-700 mt-2 font-medium">✨ Siz har doim go'zalsiz ✨</p>
+    </div>
+  </footer>
+
+  <!-- Portlashdan keyingi Modal (Pop-up Tabrik) -->
+  <div id="modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-500">
+    <div class="bg-white p-6 md:p-8 rounded-3xl text-center max-w-xs md:max-w-sm mx-4 shadow-2xl border-4 border-pink-300 transform scale-90 transition-transform duration-300" id="modal-content">
+      <div class="text-5xl mb-3">🌸✨💖</div>
+      <h2 class="font-title text-3xl text-pink-600 mb-2">Tabassum qiling!</h2>
+      <p class="text-gray-600 text-sm mb-4 leading-relaxed">
+        Kuningiz xuddi siz kabi go'zal va quvonchli o'tsin. Siz dunyodagi eng samimiy insonsiz! 😊
+      </p>
+      <button onclick="closeModal()" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-transform active:scale-95">
+        Rahmat! 💖
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Mushukcha va Shar Interaktiv Logic
+    let clicks = 0;
+    const maxClicks = 6;
+
+    function strokeCat() {
+      if (clicks >= maxClicks) return;
+
+      clicks++;
+      const balloon = document.getElementById('balloon');
+      const balloonText = document.getElementById('balloon-text');
+      const catSvg = document.getElementById('cat-svg');
+
+      // Mushukcha oyoq/tanasini silash animatsiyasi
       catSvg.classList.add('cat-licking');
       setTimeout(() => catSvg.classList.remove('cat-licking'), 600);
 
@@ -7,7 +172,7 @@
       balloon.style.setProperty('--balloon-scale', scale);
 
       if (clicks < maxClicks) {
-        balloonText.innerText = ${maxClicks - clicks} marta silang! ❤️;
+        balloonText.innerText = `${maxClicks - clicks} marta silang! ❤️`;
       } else {
         // Portlash effekti
         balloonText.innerText = "💥";
